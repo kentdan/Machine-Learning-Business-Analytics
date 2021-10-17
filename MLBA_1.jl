@@ -48,7 +48,6 @@ println(Inner_Product(Q1_5_v1, Q1_5_v2))
 # %% codecell
 function g(x,y)
     if(size(x) != size(y))
-        #println("Warning! 3*1 vector can’t do inner product with a 4*1 vector!")
         dx = size(x)
         dy = size(y)
         @warn  " $dx vector can’t do inner product with a $dy vector!"
