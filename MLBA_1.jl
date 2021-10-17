@@ -168,9 +168,6 @@ function Happy_Birthday(n,a)
     end
     end
 end
-#if count(a) = 1
-# else
-
 #4c. Output the result
     #println
 # Define the function on this block
@@ -309,11 +306,3 @@ Q5_5_name = ["Sunny", "Hsin", "Eric", "Breakfast", "Dinner", "Concert"]
 Q5_5_quantity = [0, 1, 1, 10]
 Q5_5_price = [1, 10, 100, 5]
 println(Account_Manager(Q5_5_name, Q5_5_quantity, Q5_5_price))
-
-using Pkg
-using Weave
-# add depencies for the example
-using Plots
-using DSP
-weave("vector1_MLBA.jmd")
-pwd()
