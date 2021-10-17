@@ -1,4 +1,4 @@
-# Machine-Learning-Business-Analytics
+# Vector & Julia Basics
 
 ## This is the first project of the course
 It will include the basic of vectors and Julia There are 5 question regarding this topics:
