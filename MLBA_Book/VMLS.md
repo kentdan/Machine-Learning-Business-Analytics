@@ -3,7 +3,7 @@
 I code along using VMBS book that is used for my Machine Learning for Business Analytics University courses
 https://github.com/VMLS-book/VMLS.jl
 http://vmls-book.stanford.edu
-##List of the courses included:
+##List of the Chapter included:
 
 1. Vectors
 2. Linear Functions
