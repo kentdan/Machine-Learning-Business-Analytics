@@ -16,6 +16,7 @@
 #α1 =c1 +c2/(1+r)+c3/(1+r)2,
 #Let’s check this in Julia using an interest rate of 5% per period, and the specific
 #cash flow c = (1, 2, −3).
+using Statistics
 using LinearAlgebra
 r = 0.05;
 e1 = [1,0,0]; l1 = [1,-(1+r),0]; l2 = [0,1,-(1+r)];
@@ -46,15 +47,15 @@ xexp = beta1*a1 + beta2*a2 + beta3*a3
 function gram_schmidt(a; tol = 1e-10)
 	q=[]
 	for i = 1:length(a)
-    	qtilde = a[i]
+		qtilde = a[i]
 		for j = 1:i-1
-    		qtilde -= (q[j]'*a[i]) * q[j]
+			qtilde -= (q[j]'*a[i]) * q[j]
 		end
-    if norm(qtilde) < tol
-       println("Vectors are linearly dependent.")
-       return q
-	end
-    push!(q, qtilde/norm(qtilde))
+	    if norm(qtilde) < tol
+	       println("Vectors are linearly dependent.")
+	       return q
+		end
+	    push!(q, qtilde/norm(qtilde))
 	end;
 	return q
 end
