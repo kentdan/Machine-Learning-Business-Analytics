@@ -94,6 +94,7 @@ plot!(legend = false, grid = false, size = (500,500),
 #Next, we apply our kmeans function and make a figure with the three clusters
 assignment, reps = kmeans(X, 3)
 function kmeans(x, k; maxiters = 100, tol = 1e-5)
+	grps  = [[X[i] for i=1:N if assignment[i] == j] for j=1:k]
 	N = length(x)
 	n = length(x[1])
 	distances = zeros(N)  # used to store the distance of each
