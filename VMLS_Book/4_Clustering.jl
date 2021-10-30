@@ -8,16 +8,23 @@
 # We can store the k cluster representatives as a Julia list called reps,
 # with reps[j] the jth cluster representative.
 #(In VMLS we describe the representatives as the vectors z1, . . . , zk.)
-using LinearAlgebra
+
 using Statistics
 using Plots
+using Random
 Jclust(x,reps,assignment) =
    mean( [norm(x[i]-reps[assignment[i]])^2 for i=1:length(x)] )
 x = [ [0,1], [1,0], [-1,1] ]
-reps = [ [1,1], [0,0] ]
-assignment = [1,2,1]
+reps = [ [1,1], [0,0] ] #center of each cluster
+assignment = [1,2,1] #which of the point it going to be assign
 Jclust(x,reps,assignment)
-
+group_number = [rand(1:3) for i = 1:5 ]
+group1 = [i for i=1:5 if group_number[i] == 1];
+println("index of group1 :", group1 )
+group2 = [i for i=1:5 if group_number[i] == 2];
+println("index of group1 :", group2 )
+group3 = [i for i=1:5 if group_number[i] == 3];
+println("index of group1 :", group3 )
 #The k-means algorithm
 #We write a simple Julia implementation of the k-means algorithm and
 #apply it to a set of points in a plane, similar to the example in Figure 4.1 of VMLS.
@@ -28,15 +35,44 @@ Jclust(x,reps,assignment)
 #(integers from 1 to k). The second output argument is an array of k vectors, with the k group
 #representatives. We also include two optional keyword arguments, with a limit on the number of
 #iterations and a tolerance used in the stopping condition.
-function kmeans(x, k; maxiters = 100, tol = 1e-5)
-	N = length(x)
-	n = length(x[1])
+function kmeansfunction(x, k; maxiters = 100, tol = 1e-5)
+	N = length(x) #number point of cluster
+	n = length(x[1]) # the dimention
 	distances = zeros(N)  # used to store the distance of each
-                      # point to the nearest representative.
 	reps = [zeros(n) for j=1:k]  # used to store representatives.
 	# 'assignment' is an array of N integers between 1 and k.
-	# The initial assignment is chosen randomly.
-	assignment = [ rand(1:k) for i in 1:N ]
+	assignment = [ rand(1:k) for i in 1:N ] # The initial assignment is chosen randomly.
+	Jprevious = Inf  # used in stopping condition
+	for iter = 1:maxiters
+    	# Cluster j representative is average of points in cluster j.
+		for j = 1:k
+        group = [i for i=1:N if assignment[i] == j]
+        reps[j] = sum(x[group]) / length(group);
+    end;
+    # For each x[i], find distance to the nearest representative
+	# and its group index.
+	for i=1:N
+	(distances[i], assignment[i]) =
+	findmin([norm(x[i] - reps[j]) for j = 1:k])
+	end;
+	# Compute clustering objective.
+	J = norm(distances)^2 / N
+	# Show progress and terminate if J stopped decreasing.
+	println("Iteration ", iter, ": Jclust = ", J, ".")
+	if iter>1&&abs(J-Jprevious)<tol*J
+	return assignment, reps
+	end
+	Jprevious = J
+	end
+end
+
+function kmeans(x, k; maxiters = 100, tol = 1e-5)
+	N = length(x) #number point of cluster
+	n = length(x[1]) # the dimention
+	distances = zeros(N)  # used to store the distance of each
+	reps = [zeros(n) for j=1:k]  # used to store representatives.
+	# 'assignment' is an array of N integers between 1 and k.
+	assignment = [ rand(1:k) for i in 1:N ] # The initial assignment is chosen randomly.
 	Jprevious = Inf  # used in stopping condition
 	for iter = 1:maxiters
     	# Cluster j representative is average of points in cluster j.
@@ -92,40 +128,12 @@ plot!(legend = false, grid = false, size = (500,500),
        xlims = (-1.5,2.5), ylims = (-2,2))
 #The three arrays are concatenated using vcat to get an array of 300 points.
 #Next, we apply our kmeans function and make a figure with the three clusters
+using LinearAlgebra
 assignment, reps = kmeans(X, 3)
-function kmeans(x, k; maxiters = 100, tol = 1e-5)
-	grps  = [[X[i] for i=1:N if assignment[i] == j] for j=1:k]
-	N = length(x)
-	n = length(x[1])
-	distances = zeros(N)  # used to store the distance of each
-                      # point to the nearest representative.
-	reps = [zeros(n) for j=1:k]  # used to store representatives.
-	# 'assignment' is an array of N integers between 1 and k.
-	# The initial assignment is chosen randomly.
-	assignment = [ rand(1:k) for i in 1:N ]
-	Jprevious = Inf  # used in stopping condition
-	for iter = 1:maxiters
-    	# Cluster j representative is average of points in cluster j.
-		for j = 1:k
-        group = [i for i=1:N if assignment[i] == j]
-        reps[j] = sum(x[group]) / length(group);
-    end;
-    # For each x[i], find distance to the nearest representative
-	# and its group index.
-	for i=1:N
-	(distances[i], assignment[i]) =
-	findmin([norm(x[i] - reps[j]) for j = 1:k])
-	end;
-	# Compute clustering objective.
-	J = norm(distances)^2 / N
-	# Show progress and terminate if J stopped decreasing.
-	println("Iteration ", iter, ": Jclust = ", J, ".")
-	if iter>1&&abs(J-Jprevious)<tol*J
-	return assignment, reps
-	end
-	Jprevious = J
-	end
-end
+
+k = 3
+N = length(X)
+
 grps  = [[X[i] for i=1:N if assignment[i] == j] for j=1:k]
 scatter([c[1] for c in grps[1]], [c[2] for c in grps[1]])
 scatter!([c[1] for c in grps[2]], [c[2] for c in grps[2]])
