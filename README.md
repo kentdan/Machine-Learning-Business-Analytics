@@ -1,5 +1,5 @@
-# Machine Learning for Business Analytics
-##商管機器學習 (IMPS7008)
+# Introduction to Applied Linear Algebra
+Code along and self study from http://vmls-book.stanford.edu/
 
 ##Reading
 - Introduction to Applied Linear Algebra (Vectors, Matrices, and Least Squares) Julia Language Companion, Stephen Boyd and Lieven Vandenberghe
